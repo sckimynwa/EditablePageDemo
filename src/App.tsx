@@ -1,32 +1,19 @@
-import { UserServiceClient } from 'questionspoke';
-import { Suspense, useEffect } from 'react';
+import React, { useState } from 'react';
 
-function App() {
-  const tempFunc = async () => {
-    const userClient = new UserServiceClient({
-      auth: {
-        getRequestHeaders: async () => ({
-          authorization: 'Bearer token',
-        }),
-      } as any,
-      fallback: 'rest',
-      protocol: 'http',
-      apiEndpoint: 'localhost:3000',
-      port: undefined,
-    });
-    const res = await userClient.getUser({ name: 'me' });
-    console.log(res);
-  };
+import type { Value } from '@react-page/editor';
+import Editor from '@react-page/editor';
 
-  useEffect(() => {
-    tempFunc();
-  }, []);
+import slate from '@react-page/plugins-slate';
+import image from '@react-page/plugins-image';
+
+const cellPlugins = [slate(), image];
+
+export default function SimpleExample() {
+  const [value, setValue] = useState<Value | null>(null);
 
   return (
-    <Suspense fallback={<></>}>
-      <div>Hello World</div>
-    </Suspense>
+    <div>
+      <Editor cellPlugins={cellPlugins} value={value} onChange={setValue} />
+    </div>
   );
 }
-
-export default App;
